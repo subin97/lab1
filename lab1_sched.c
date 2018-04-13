@@ -687,13 +687,13 @@ void Show(Program *process) {
 
 			if (scheduling[i][j]) {
 
-				printf("■");
+				printf("■ ");
 
 				scheduling[i][j] = 0; //scheduling 초기화
 
 			}
 
-			else printf("□");
+			else printf("□ ");
 
 		}
 
