@@ -159,6 +159,7 @@ void SJF(Program *process) {
 
 	int RP = -1;   // running process 큐에서 pop되어 run상태인 process
 
+
 	int SJ;   //shortest job
 
  
@@ -183,13 +184,13 @@ void SJF(Program *process) {
 
 				SJ = process[RP].serviceT;
 
-				push(RP);
-
  
 
 				for (i = front; i < rear; i++) {  //큐 내의 프로세스들 서비스시간 비교
 
-					if (process[queue[i]].serviceT <= SJ) { //서비스시간 제일 짧은 것 구하기
+					if (process[queue[i]].serviceT < SJ) { //서비스시간 제일 짧은 것 구하기
+
+						push(RP);					
 
 						RP = pop2(i);
 
