@@ -29,30 +29,15 @@
 
 #include "lab1_sched_types.h"
 
-/*
- * you need to implement scheduler simlator test code.
- *
- */
-
-
-#define job_num 5
-#define size 20
-#define tixSize 100
-#define TS 4 //RR timeslice 는 4초
-
 int main(int argc, char *argv[]){
    
 	int num = 0; //  메뉴 선택 변수
 
- 
-
-	int mlfq[job_num][size];
-
 	Program process[job_num];
 
- 
+	printf("%d개의 process 도착시간과 서비스시간, 우선순위를 입력하세요 : ", job_num);
 
-	for (int i = 0; i < job_num; i++) {   //도착시간과 서비스시간 입력받으며, MLFQ와 동기화
+	for (int i = 0; i < job_num; i++) {   //도착시간과 서비스시간, 우선순위 입력 받기
 
 		scanf("%d", &process[i].arrivalT);
 
@@ -63,14 +48,6 @@ int main(int argc, char *argv[]){
 		process[i].performT = 0;
 
 		process[i].key = i;
-
- 
-
-		for (int j = 0; j < 20; j++) { //MLFQ용 scheduling 초기화
-
-			mlfq[i][j] = 0;
-
-		}
 
 	}
 
@@ -110,7 +87,9 @@ int main(int argc, char *argv[]){
 
 			break;
 
-		case 4: MLFQ(process, mlfq);
+		case 4: MLFQ(process);
+
+			Show(process);
 
 			break;
 

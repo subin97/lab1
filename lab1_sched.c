@@ -28,40 +28,16 @@
 
 #include "lab1_sched_types.h"
 
-#define job_num 5
-#define size 20
-#define tixSize 100
-#define TS 4 //RR timeslice 는 4초
-
-int sec = 0;
+int sec = 0;   //시간 변수
 int i, j;      //for문 사용시 쓰는 변수
 int queue[size] = { 0 };
-int isEmpty();
 int push(int data);
 int pop();
-int pop2(int index);
+int pop2(int index);  //원하는 queue[index] data pop
 int front = 0;
 int rear = 0;
 int scheduling[job_num][size] = { 0 };
-char job[5] = { 'A','B','C','D','E' };   
-/*
- * you need to implement FCFS, RR, SPN, SRT, HRRN, MLFQ scheduler. 
- */
-
-
- 
-
-		  /*
-
-		  * you need to implement FCFS, RR, SPN, SRT, HRRN, MLFQ scheduler.
-
-		  */
-
- 
-
-		  // 큐에서 해당 index를 매개변수로 받아와서 pop하는 함수
-
-		  // 
+char job[5] = { 'A','B','C','D','E' };   //job이름
 
 int push(int data) {
 
@@ -129,7 +105,7 @@ void FCFS(Program* process) {
 
 	for (sec = 0; sec < size; sec++) {
 
-		for (j = 0; j < 5; j++) {
+		for (j = 0; j < job_num; j++) {
 
 			if (process[j].arrivalT == sec) {
 
@@ -187,7 +163,7 @@ void SJF(Program *process) {
 
  
 
-	for (sec = 0; sec < 20; sec++) {
+	for (sec = 0; sec < size; sec++) {
 
 		for (j = 0; j < job_num; j++) {
 
@@ -253,7 +229,7 @@ void RR(Program *process) {
 
  
 
-	for (sec = 0; sec < 20; sec++) {
+	for (sec = 0; sec < size; sec++) {
 
 		for (j = 0; j < job_num; j++) {
 
@@ -307,21 +283,21 @@ void RR(Program *process) {
 
  
 
-void MLFQ(Program *process, int(*mlfq)[20]) {
+void MLFQ(Program *process) {
 
-	Program p[5];//Process구조체에 있는 정보들을 변수에 넣음
+	Program p[job_num];//Process구조체에 있는 정보들을 변수에 넣음
 
-	Program *q[5];//남은 srvtime을 넣음
+	Program *q[job_num];//남은 srvtime을 넣음
 
-	Program *que1[20];
+	Program *que1[size];
 
-	Program *que2[20];
+	Program *que2[size];
 
-	Program *que3[20];
+	Program *que3[size];
 
 	int sum = 0;
 
-	int sec = 0;
+	sec = 0;
 
  
 
@@ -351,7 +327,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
  
 
-	for (int i = 0; i<5; i++) {//Program구조체에 있는 process정보들을 p에 넣음
+	for (int i = 0; i<job_num; i++) {//Program구조체에 있는 process정보들을 p에 넣음
 
 		p[i] = process[i];
 
@@ -361,7 +337,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 	}
 
-	for (int i = 0; i<20; i++) {
+	for (int i = 0; i<size; i++) {
 
 		que1[i] = NULL;
 
@@ -401,7 +377,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 		for (int v = t; v <= sec; v++) {
 
-			for (int k = 0; k<5; k++) {//5번의 process를 돌려서 같은도착시간을 갖고 있는 job을 찾음
+			for (int k = 0; k<job_num; k++) {//5번의 process를 돌려서 같은도착시간을 갖고 있는 job을 찾음
 
 				if (v == p[k].arrivalT) {//v와 arvtime이 같은 job을 que1에 삽입
 
@@ -489,7 +465,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 					for (int m = 0; m<timeslice1; m++) {
 
-						mlfq[que1[count1]->key][sec] = 1;
+						scheduling[que1[count1]->key][sec] = 1;
 
 						sec++;//timeslice만큼 수행
 
@@ -507,7 +483,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 					for (int m = 0; m<num1; m++) {
 
-						mlfq[que1[count1]->key][sec] = 1;
+						scheduling[que1[count1]->key][sec] = 1;
 
 						sec++;
 
@@ -531,7 +507,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 					for (int m = 0; m<timeslice2; m++) {
 
-						mlfq[que2[count2]->key][sec] = 1;
+						scheduling[que2[count2]->key][sec] = 1;
 
 						sec++;//timeslice만큼 수행
 
@@ -549,7 +525,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 					for (int m = 0; m<num2; m++) {
 
-						mlfq[que2[count2]->key][sec] = 1;
+						scheduling[que2[count2]->key][sec] = 1;
 
 						sec++;
 
@@ -573,7 +549,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 					for (int m = 0; m<timeslice3; m++) {
 
-						mlfq[que3[count3]->key][sec] = 1;
+						scheduling[que3[count3]->key][sec] = 1;
 
 						sec++;
 
@@ -591,7 +567,7 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
 
 					for (int m = 0; m<num3; m++) {
 
-						mlfq[que3[count3]->key][sec] = 1;
+						scheduling[que3[count3]->key][sec] = 1;
 
 						sec++;
 
@@ -612,26 +588,6 @@ void MLFQ(Program *process, int(*mlfq)[20]) {
  
 
 	}//for(t)
-
-	for (int i = 0; i < 5; i++) {
-
-		for (int j = 0; j < 20; j++) {
-
-			if (mlfq[i][j] == 1)
-
-				printf("■");
-
-			else if (mlfq[i][j] == 0)
-
-				printf("□");
-
-		}
-
-		printf("\n");
-
-	}
-
-	printf("\n");
 
 }
 
@@ -669,7 +625,7 @@ void lottery(Program* process) {
 
 	// tix할당
 
-	for (sec = 0; sec < 20; sec++) {
+	for (sec = 0; sec < size; sec++) {
 
 		// time 반복
 
@@ -727,7 +683,7 @@ void Show(Program *process) {
 
  
 
-		for (j = 0; j < 20; j++) {
+		for (j = 0; j < size; j++) {
 
 			if (scheduling[i][j]) {
 
@@ -743,7 +699,7 @@ void Show(Program *process) {
 
 		printf("\n");
 
-		process[i].performT = 0;
+		process[i].performT = 0;  //수행한 시간 초기화
 
 	}
 
