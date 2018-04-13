@@ -597,81 +597,94 @@ void MLFQ(Program *process) {
 //lottery
 
 void lottery(Program* process) {
-
-	int RP = -1;
+int RP = -1;
 
 	int winner;
 
-	int tix[job_num];         // 티켓
+	int tix[job_num] = { -1 };         // 티켓
 
 	int sum = 0;         // priority의 총합
 
- 
+	int temp1, temp2, temp3;
 
-	for (i = 0; i < job_num; i++) {
+	int use[job_num] = { 0 };
 
-		sum += process[i].priority;
-
-	}
-
-	// priority의 sum구하기
-
-	for (i = 0; i < job_num; i++) {
-
-		tix[i] = process[i].priority*tixSize / sum;
-
-		if (i > 0) tix[i] += tix[i - 1];
-
-	}
-
-	// tix할당
-
-	for (sec = 0; sec < size; sec++) {
-
-		// time 반복
-
-		for (i = 0; i < job_num; i++) {
-
-			if (process[i].arrivalT == sec)
-
-				push(i);
-
-			// 도착하는대로 push
-
-		}
+	int temp = 0;
 
  
 
-		while (1) {
+	for (sec = 0; sec < 20; sec++) {
 
-			winner = rand() % tixSize;    // 0부터 tixSize-1까지 범위의 난수생성
+		sum = 0;
 
-			for (i = 0; i <job_num; i++) {
+		temp = 0;
 
-				if (winner < tix[i]) {   // winner의 범위 지정
+		for (i = 0;i<job_num;i++) {
 
-					RP = pop();
+			if ((process[i].arrivalT <= sec) && (process[i].serviceT > process[i].performT)) {
 
-					if (process[RP].serviceT != process[RP].performT) push(RP);   // 수행시간과 서비스시간이 다를 때 push
+				// 도착시간이 현재시간이거나 이전이며, 수행시간이 서비스타임보다 작을때
 
-					break;   // for문 탈출
+				// 현재시간에 스케줄링을 수행할 수 있다.
 
-				}
+				use[i]++;
+
+				if (use[i] == 1)
+
+					sum += process[i].priority;
 
 			}
 
-			// 뽑힌 티켓을 가진 프로세스=RP
+		}
 
-			if ((RP != -1) && (process[RP].serviceT != process[RP].performT)) break;
+		for (i = 0;i < job_num;i++) {
 
-			//
+			if (use[i] == 1) {
+
+				tix[i] = process[i].priority*tixSize / sum;
+
+				temp += tix[i];
+
+				tix[i] = temp;
+
+			}// 스케줄링이 가능한 프로세스들만 티켓 배부
 
 		}
 
-		scheduling[RP][sec] = 1;
+ 
 
-		process[RP].performT++;
+		winner = rand() % tixSize;    // 0부터 tixSize-1까지 범위의 난수생성
 
+									  //printf("%d ",winner);
+
+		for (i = 0; i < job_num; i++) {
+
+			if ((use[i] == 1) && (winner < tix[i])) {   // winner의 범위 지정
+
+				RP = i;
+
+				break;   // for문 탈출
+
+						// 뽑힌 티켓을 가진 프로세스=RP
+
+			}
+
+		}
+
+		if (RP != -1) {
+
+			scheduling[RP][sec] = 1;
+
+			process[RP].performT++;
+
+		}
+
+		for (i = 0;i < job_num;i++)
+
+			use[i] = 0;
+
+		// use 배열 초기화
+		RP=-1;
 	}
 
 }
